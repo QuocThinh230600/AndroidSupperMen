@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.androidnangcao.MainActivity;
+import com.example.androidnangcao.SecondActivity;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -33,18 +34,18 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        callbackManager = CallbackManager.Factory.create();
+        
         TextView username =(TextView) findViewById(R.id.et_user_name);
         TextView password =(TextView) findViewById(R.id.et_password);
         TextView forgot_password =(TextView) findViewById(R.id.tv_forgot_password);
         Button buttonLogin =(Button) findViewById(R.id.button_login);
         ImageView fb_button =(ImageView) findViewById(R.id.fb_btn);
 
-        callbackManager = CallbackManager.Factory.create();
-
         LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                startActivity(new Intent(LoginActivity.this, SecondActivity.class));
                 finish();
             }
 
@@ -64,6 +65,8 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                  if(username.getText().toString().equals("admin") && password.getText().toString().equals("1")){
                      Toast.makeText(LoginActivity.this, "Login successfull", Toast.LENGTH_LONG).show();
+                     startActivity(new Intent(LoginActivity.this, SecondActivity.class));
+                     finish();
                  } else {
                     Toast.makeText(LoginActivity.this, "Login False!!!", Toast.LENGTH_LONG).show();
                  }
