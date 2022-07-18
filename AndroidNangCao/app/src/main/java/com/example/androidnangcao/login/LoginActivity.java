@@ -25,9 +25,12 @@ import com.facebook.login.LoginResult;
 
 import java.util.Arrays;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
     CallbackManager callbackManager;
+    private TextView username, password, forgot_password;
+    private Button buttonLogin, btnRegister;
+    private ImageView fb_button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,16 +39,27 @@ public class LoginActivity extends AppCompatActivity {
 
         callbackManager = CallbackManager.Factory.create();
         
-        TextView username =(TextView) findViewById(R.id.et_user_name);
-        TextView password =(TextView) findViewById(R.id.et_password);
-        TextView forgot_password =(TextView) findViewById(R.id.tv_forgot_password);
-        Button buttonLogin =(Button) findViewById(R.id.button_login);
-        ImageView fb_button =(ImageView) findViewById(R.id.fb_btn);
+        username =(TextView) findViewById(R.id.et_user_name);
+        password =(TextView) findViewById(R.id.et_password);
+
+        forgot_password =(TextView) findViewById(R.id.tv_forgot_password);
+        forgot_password.setOnClickListener(this);
+
+        buttonLogin =(Button) findViewById(R.id.button_login);
+        buttonLogin.setOnClickListener(this);
+
+        btnRegister =(Button) findViewById(R.id.button_register);
+        btnRegister.setOnClickListener(this);
+
+        fb_button =(ImageView) findViewById(R.id.fb_btn);
+        fb_button.setOnClickListener(this);
 
         LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                startActivity(new Intent(LoginActivity.this, SecondActivity.class));
+                Toast.makeText(LoginActivity.this, "Login successfull", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(LoginActivity.this, SecondActivity.class);
+                startActivity(intent);
                 finish();
             }
 
@@ -60,25 +74,6 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        buttonLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                 if(username.getText().toString().equals("admin") && password.getText().toString().equals("1")){
-                     Toast.makeText(LoginActivity.this, "Login successfull", Toast.LENGTH_LONG).show();
-                     startActivity(new Intent(LoginActivity.this, SecondActivity.class));
-                     finish();
-                 } else {
-                    Toast.makeText(LoginActivity.this, "Login False!!!", Toast.LENGTH_LONG).show();
-                 }
-            }
-        });
-
-        fb_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                LoginManager.getInstance().logInWithReadPermissions(LoginActivity.this, Arrays.asList("public_profile"));
-            }
-        });
     }
 
 
@@ -86,5 +81,28 @@ public class LoginActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         callbackManager.onActivityResult(requestCode, resultCode, data);
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.button_login:
+                if(username.getText().toString().equals("admin") && password.getText().toString().equals("1")){
+                    Toast.makeText(LoginActivity.this, "Login successfull", Toast.LENGTH_LONG).show();
+                    startActivity(new Intent(LoginActivity.this, SecondActivity.class));
+                    finish();
+                } else {
+                    Toast.makeText(LoginActivity.this, "Login False!!!", Toast.LENGTH_LONG).show();
+                }
+                break;
+
+            case R.id.button_register:
+                startActivity(new Intent(this, RegisterActivity.class));
+                break;
+
+            case R.id.fb_btn:
+                LoginManager.getInstance().logInWithReadPermissions(LoginActivity.this, Arrays.asList("public_profile"));
+                break;
+        }
     }
 }
